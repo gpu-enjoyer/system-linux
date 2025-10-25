@@ -10,7 +10,7 @@
 #include <filesystem>       // backup(fs::path source, target)
 
 // #include <thread>        // std::this_thread::sleep_for
-// #include <chrono>        // wake_up(when_the_sun_is_shining)
+// #include <chrono>        // control sleep Time
 
 namespace fs = std::filesystem;
 
@@ -53,6 +53,13 @@ void readConfig(
         syslog(LOG_ERR, "ERROR: config.yaml: freq = \"%s\" is not valid", freqStr.c_str());
         dyingWish(-1);
     }
+}
+
+void doBackup(
+    std::string  source,
+    std::string  target)
+{
+
 }
 
 

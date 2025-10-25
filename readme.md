@@ -18,13 +18,16 @@ backup-daemon --restart
 backup-daemon --stop
 ```
 
+
 ## Roadmap
 
 - [x] read(config.yaml)
-- [ ] backup(std::fs source, target)
-- [ ] sleep(freq), what if computer is turned off?
+- [ ] backup(fs::path source, target)
+- [ ] sleep(freq)
+- [ ] save(Time) before OS shutdown
+- [ ] wake_up(when OS_starts)
 - [ ] shell UI
-- [ ] defend system files
+- [ ] protect system files
 
 
 ## syslog

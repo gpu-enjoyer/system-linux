@@ -3,7 +3,9 @@
 #include <syslog.h>         // System log journal
 
 #include <yaml-cpp/yaml.h>  // Read config.yaml
-#include <iostream>         // UI, debug
+
+
+#include <iostream>         // UI
 
 #include <filesystem>       // backup(fs::path source, target)
 
@@ -67,10 +69,9 @@ int main()
 
     readConfig(source, target, freq);
 
-    std::cout
-        << "source = " << source << '\n'
-        << "target = " << target << '\n'
-        << "freq   = " << freq   << '\n';
+    syslog(LOG_NOTICE, "source directory = %s", source.c_str());
+    syslog(LOG_NOTICE, "target directory = %s", target.c_str());
+    syslog(LOG_NOTICE, "backup frequency = %i", freq);
     
     // ?  backup: std::fs vs memcpy()
 

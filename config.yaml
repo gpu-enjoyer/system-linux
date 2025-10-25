@@ -1,0 +1,9 @@
+
+# What do U need to backup my friend?
+source: ./source/
+
+# Where would U save your information my friend?
+target: ./target/
+
+# Frequency: every min/hour/day/week
+freq: min

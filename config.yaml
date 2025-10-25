@@ -6,4 +6,4 @@ source: ./source/
 target: ./target/
 
 # Frequency: every min/hour/day/week
-freq: min
+freq: privet

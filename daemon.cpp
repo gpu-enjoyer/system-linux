@@ -47,6 +47,10 @@ void readConfig(
     else if (freqStr == "hour")  freq = 60;
     else if (freqStr == "day")   freq = 1440;
     else if (freqStr == "week")  freq = 10080;
+    else {
+        syslog(LOG_ERR, "ERROR: config.yaml: freq = \"%s\" is not valid", freqStr.c_str());
+        dyingWish(-1);
+    }
 }
 
 

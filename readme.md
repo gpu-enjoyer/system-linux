@@ -4,7 +4,7 @@
 ```bash
 # Edit config.yaml
 
-# (Optional) Create system log symlink
+# Create system log symlink
 ln -s /var/log/syslog syslog-link
 
 # Run

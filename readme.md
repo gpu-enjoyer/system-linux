@@ -2,6 +2,19 @@
 # Backup Daemon
 
 ```bash
+#
+# Todo:
+#
+#   sudo systemctl start <service>
+#   sudo systemctl stop <service>
+#   sudo systemctl restart <service>
+#   sudo systemctl reload <service>
+#
+#   sudo systemctl enable <service>
+#   sudo systemctl disable <service>
+#   sudo systemctl is-enabled <service>
+#
+
 # Edit config.yaml
 
 # Create system log symlink

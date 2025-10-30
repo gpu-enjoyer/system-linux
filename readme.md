@@ -2,18 +2,6 @@
 # Backup Daemon
 
 ```bash
-#
-# Todo:
-#
-#   sudo systemctl start <service>
-#   sudo systemctl stop <service>
-#   sudo systemctl restart <service>
-#   sudo systemctl reload <service>
-#
-#   sudo systemctl enable <service>
-#   sudo systemctl disable <service>
-#   sudo systemctl is-enabled <service>
-#
 
 # Edit config.yaml
 
@@ -24,23 +12,39 @@ ln -s /var/log/syslog syslog-link
 make
 
 # Check ./syslog-link
+```
 
+```bash
 # Todo: shell UI
 backup-daemon --help
 backup-daemon --restart
 backup-daemon --stop
 ```
 
+```
+ Todo:
+
+   sudo systemctl start <service>
+   sudo systemctl stop <service>
+   sudo systemctl restart <service>
+   sudo systemctl reload <service>
+
+   sudo systemctl enable <service>
+   sudo systemctl disable <service>
+   sudo systemctl is-enabled <service>
+
+```
+
 
 ## Roadmap
 
 - [x] read(config.yaml)
-- [ ] backup(fs::path source, target)
-- [ ] sleep(freq)
+- [x] backup(fs::path source, target)
+- [x] sleep(freq)
 - [ ] save(Time) before OS shutdown
 - [ ] wake_up(when OS_starts)
 - [ ] shell UI
-- [ ] protect system files
+- [x] protect system files
 
 
 ## syslog

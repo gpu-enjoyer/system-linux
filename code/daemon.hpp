@@ -1,12 +1,19 @@
 
 #include <filesystem>
 namespace fs = std::filesystem;
+
 #include <yaml-cpp/yaml.h>
+
+#include <chrono>
+using sys_clock = std::chrono::system_clock;
+
 #include <iostream>
 
 
 class Config
 {
+    friend class Daemon;
+    
     fs::path source;
     fs::path target;
     uint16_t frequency;
@@ -27,7 +34,7 @@ class Daemon
 
 public:
 
+    Daemon() = default;
     Daemon(fs::path configPath);
-    void backup();  // todo
-    void run();     // todo
+    void backup();
 };

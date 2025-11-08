@@ -1,18 +1,17 @@
 
 #include "daemon.hpp"
 
+//
+// todo: что именно указывают в этих файлах?
+// todo: как организовать с ними взаимодействие?
+//
+//   /etc/systemd/system/backupd.service
+//   /etc/systemd/system/backupd.timer
+//
 
 int main()
 {
-    try
-    {
-        Daemon daemon("/etc/backupd/config.yaml");
-        // daemon.backup();
-        return 0; 
-    }
-    catch (const std::exception& e)
-    {
-        std::cerr << "backup-daemon failed: " << e.what() << std::endl; 
-        return 1;
-    }
+    Daemon D("/etc/backupd/config.yaml");
+    D.backup();
+    return 0;
 }

@@ -1,5 +1,5 @@
 
-#include "config.hpp"
+#include "daemon.hpp"
 #define err(msg) std::runtime_error(msg)
 
 
@@ -13,7 +13,6 @@ bool Config::getFrequency(
     else    return false;
     return true;
 }
-
 
 Config::Config(
     fs::path configPath)
@@ -51,8 +50,16 @@ Config::Config(
 void Config::print()
 {
     std::cout
-        << "\n source    = " << source
-        << "\n target    = " << target
-        << "\n frequency = " << frequency << " (min)"
+        << "\n Config.source    = " << source
+        << "\n Config.target    = " << target
+        << "\n Config.frequency = " << frequency << " (min)"
         << std::endl;
+}
+
+
+Daemon::Daemon(
+    fs::path configPath)
+{
+    config = Config(configPath);
+    config.print();
 }

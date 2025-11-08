@@ -7,7 +7,7 @@ check_yaml:
 build:
 	rm -rf .build
 	mkdir .build
-	g++ -std=c++17 src/main.cpp src/config.cpp -lyaml-cpp -o .build/daemon
+	g++ -std=c++17 src/main.cpp src/daemon.cpp -lyaml-cpp -o .build/daemon
 
 run:
 	.build/daemon

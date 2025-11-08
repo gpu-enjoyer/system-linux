@@ -1,8 +1,9 @@
 
-#include <yaml-cpp/yaml.h>
 #include <filesystem>
 namespace fs = std::filesystem;
+#include <yaml-cpp/yaml.h>
 #include <iostream>
+
 
 class Config
 {
@@ -14,6 +15,17 @@ class Config
 
 public:
 
-    Config(const fs::path configPath);
+    Config() = default;
+    Config(fs::path configPath);
     void print();
+};
+
+
+class Daemon
+{
+    Config config;
+
+public:
+
+    Daemon(fs::path configPath);
 };

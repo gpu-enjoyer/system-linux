@@ -1,52 +1,86 @@
 
-#include <csignal>  // OS' signals
-#include <syslog.h> // System log journal
+//! Возможно, написанное ниже полезно и правильно,
+//!  но это точно не то, с чего надо начать.
+//!   Многие возможности инкапсулированы в системных библиотеках.
 
-#include <yaml-cpp/yaml.h> // Read config.yaml
+//  push:        "in-progress" branch
+//  checkout -b: "tutorial" branch
 
-#include <filesystem> // backup(source, target)
+#include <csignal>
+// OS' signals
+
+#include <syslog.h>
+// System log journal
+
+#include <yaml-cpp/yaml.h>
+// Read config.yaml
+
+#include <filesystem>
 namespace fs = std::filesystem;
+// backup(fs::path source, fs::path target)
 
-// #include <thread>           // std::this_thread::sleep_for
-// #include <chrono>           // Control sleep Time
-// #include <iostream>         // UI
 
+void dyingWish(int sign)
+{
+    syslog(LOG_NOTICE, " === backup-daemon stopped === "); 
+    closelog();
+    exit(sign);
+}
+
+
+enum class freqEnum: uint8_t
+{
+    min,  // 0
+    hour, // 1
+    day,  // 2
+    week  // 3
+};
+
+freqEnum fromStr(const std::string& freqStr)
+{
+    if (freqStr == "min")  return freqEnum::min;
+    if (freqStr == "hour") return freqEnum::hour;
+    if (freqStr == "day")  return freqEnum::day;
+    if (freqStr == "week") return freqEnum::week;
+    throw std::invalid_argument("Invalid freq value: " + freqStr);
+}
 
 class Daemon {
 
-    fs::path  source;
-    fs::path  target;
-    int       freq;
+    fs::path source;
+    fs::path target;
+    freqEnum frequency;
 
     void init()
     {
-        signal(SIGTERM, dyingWish); // set dyingWish() as a termination function
+        signal(SIGTERM, dyingWish);
+        // (termination_signal, termination_function)
+
         openlog("backup-daemon", LOG_PID, LOG_DAEMON);
-        syslog(LOG_NOTICE, " === backup-daemon started === ");
+        // (proc_name, proc_id, proc_type)
+
+        syslog(LOG_NOTICE, "started!");
     }
 
-    // todo: configPath -> str -> check -> Daemon fields
     void readConfig(std::string configPath)
     {
-        fs::path     sourcePath;
-        fs::path     targetPath;
-        std::string  freqStr;
-
         try
         {
+            // todo: install.sh -> system path to config
             YAML::Node config = YAML::LoadFile("config.yaml");
-            source  = config["source"].as<std::string>();
-            target  = config["target"].as<std::string>();
-            freqStr = config["freq"].as<std::string>();
+
+            source    = config["source"].as<std::string>();
+            target    = config["target"].as<std::string>();
+            frequency = fromStr( config["frequency"].as<std::string>() );
         }
         catch (const YAML::BadFile& e)
         {
-            syslog(LOG_ERR, "ERROR: config.yaml could not be opened");
+            syslog(LOG_ERR, "Bad config.yaml (path: %s)", configPath.c_str());
             dyingWish(-1);
         }
         catch (const YAML::ParserException& e)
         {
-            syslog(LOG_ERR, "ERROR: config.yaml parse error");
+            syslog(LOG_ERR, "Parse error: config.yaml (path: %s)", configPath.c_str());
             dyingWish(-1);
         }
 
@@ -93,12 +127,8 @@ class Daemon {
 
         syslog(
             LOG_NOTICE,
-            " === backup-daemon backup() successfull === "
-        );
-
-        syslog(
-            LOG_NOTICE,
-            "[ %s ] -> [ %s ]",
+            "%s  ->  %s\
+            backup DONE",
             sourcePath.c_str(),
             targetPath.c_str()
         );
@@ -116,13 +146,6 @@ public:
         }
     }
 };
-
-void dyingWish(int sign)
-{
-    syslog(LOG_NOTICE, " === backup-daemon stopped === "); 
-    closelog();
-    exit(sign);
-}
 
 
 int main()

@@ -1,0 +1,9 @@
+
+# Absolute path: source dirictory
+source:  /home/user/Desktop/source_dir
+
+# Absolute path: target dirictory
+target:  /home/user/Desktop/target_dir
+
+# Backup frequency: min/hour/day/week
+frequency:  min

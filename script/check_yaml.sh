@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 HAVE_YAML=$(
     echo "#include <yaml-cpp/yaml.h>" | \
     g++ -x c++ - -c -o /dev/null >/dev/null 2>/dev/null \

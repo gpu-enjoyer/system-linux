@@ -4,17 +4,21 @@
 ## Usage
 
 ```bash
-# Edit config.yaml
-make
+# Edit ./etc/backupd/config.yaml
+sudo make
 ```
 
 ## Roadmap
 
-- [x] `class Config`
-- [ ] `backup()`
-- [ ] Integration into OS using `systemd`
+- [x] `class Daemon`
+- [ ] `Daemon.backup()`
+- [x] prepare: `/etc/systemd/system/` + `/etc/backupd/`
+- [ ] fill with content: `/etc/systemd/system/` + `/etc/backupd/`
+- [ ] `backupd status`
+- [ ] `backupd set-source`
+- [ ] `backupd set-target`
+- [ ] `backupd set-frequency`
 - [ ] Protect OS system directories
-- [ ] Shell UI
 
 ## Sources
 

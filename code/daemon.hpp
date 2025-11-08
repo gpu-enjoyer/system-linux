@@ -28,4 +28,6 @@ class Daemon
 public:
 
     Daemon(fs::path configPath);
+    void backup();  // todo
+    void run();     // todo
 };

@@ -1,9 +1,9 @@
 
 # What do U need to backup my friend?
-source: ./source/
+source: ./test/source_dir
 
 # Where would U save your information my friend?
-target: ./target/
+target: ./test/target_dir
 
-# Frequency: every min/hour/day/week
-freq: min
+# Backup frequency: min/hour/day/week
+frequency: min

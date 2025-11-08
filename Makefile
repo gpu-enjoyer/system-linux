@@ -1,16 +1,13 @@
 
-HAVE_YAML := $(shell test -f /usr/include/yaml-cpp/yaml.h && echo yes || echo no)
+all: check_yaml build run
 
-ifeq ($(HAVE_YAML),no)
-$(error Please install 'sudo apt install libyaml-cpp-dev')
-endif
-
-all: build run
+check_yaml:
+	src/check_yaml.sh
 
 build:
 	rm -rf .build
 	mkdir .build
-	g++ -std=c++17 daemon.cpp -lyaml-cpp -o .build/daemon
+	g++ -std=c++17 src/main.cpp src/config.cpp -lyaml-cpp -o .build/daemon
 
 run:
 	.build/daemon

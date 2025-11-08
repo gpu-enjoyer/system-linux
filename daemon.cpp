@@ -84,12 +84,11 @@ class Daemon {
             dyingWish(-1);
         }
 
-        if      (freqStr == "min")   freq = 1;
-        else if (freqStr == "hour")  freq = 60;
-        else if (freqStr == "day")   freq = 1440;
-        else if (freqStr == "week")  freq = 10080;
-        else
-        {
+        if      (freqStr == "min")  freq = 1;
+        else if (freqStr == "hour") freq = 60;
+        else if (freqStr == "day")  freq = 1440;
+        else if (freqStr == "week") freq = 10080;
+        else {
             syslog(LOG_ERR, "ERROR: config.yaml: freq = \"%s\" is not valid", freqStr.c_str());
             dyingWish(-1);
         }
@@ -113,24 +112,64 @@ class Daemon {
 
         targetPath = fs::absolute(targetPath);
 
-        // проверить, что пути не указывают на системные файлы, иначе: ошибка
-        // проверить, что targetPath - папка, иначе: ошибка
+        if (!fs::is_directory(targetPath)) {
+            syslog(LOG_ERR, "ERROR: config.yaml: target = %s is not a directory", target.c_str());
+            dyingWish(-1);
+        }
+
+        if (!fs::is_directory(sourcePath)) {
+            syslog(LOG_ERR, "ERROR: config.yaml: source = %s is not a directory", source.c_str());
+            dyingWish(-1);
+        }
+
+        std::vector<fs::path> forbidden = {"/bin", "/boot", "/dev", "/etc", "/lib", "/proc", "/root", "/sbin", "/sys", "/usr"};
+
+        std::string src_str = sourcePath.string();
+        std::string tgt_str = targetPath.string();
+
+        for (const auto& f : forbidden)
+        {
+            std::string forb_str = f.string();
+            if (src_str.find(forb_str) == 0 || tgt_str.find(forb_str) == 0)
+            {
+                syslog(LOG_ERR, "ERROR: config.yaml: path points to forbidden system directory: %s", forb_str.c_str());
+                dyingWish(-1);
+            }
+        }
+
+        this->source = sourcePath;
+        this->target = targetPath;
     }
 
-
+    // backupDir = target/backup_DD-MM-YYYY_HH:MM
     void backup(
         fs::path sourcePath,
         fs::path targetPath)
     {
-        // создать папку backupDir = target/backup_DD-MM-YYYY_HH:MM
-        // копировать source -> backupDir
+        auto now = std::chrono::system_clock::now();
+        auto in_time_t = std::chrono::system_clock::to_time_t(now);
+        std::tm bt = *std::localtime(&in_time_t);
+        std::stringstream ss;
+        ss << "backup_" << std::put_time(&bt, "%d-%m-%Y_%H:%M");
+        std::string backupDirName = ss.str();
+        fs::path backupDir = targetPath / backupDirName;
+
+        try {
+            fs::create_directory(backupDir);
+            fs::path dest = backupDir / sourcePath.filename();
+            fs::copy(sourcePath, dest, fs::copy_options::recursive);
+        }
+        catch (const fs::filesystem_error& e) {
+            syslog(LOG_ERR, "ERROR: backup failed: %s", e.what());
+            return;
+        }
 
         syslog(
             LOG_NOTICE,
             "%s  ->  %s\
             backup DONE",
             sourcePath.c_str(),
-            targetPath.c_str()
+            (backupDir / sourcePath.filename()).c_str()
         );
     }
 
@@ -142,7 +181,9 @@ public:
         while (true)
         {
             readConfig(configPath);
-            // backup();
+            backup(source, target);
+            // Спать в течение времени
+            std::this_thread::sleep_for(std::chrono::minutes(freq));
         }
     }
 };
@@ -151,5 +192,6 @@ public:
 int main()
 {
     Daemon D("config.yaml");
+    // ...
     return 0;
 }

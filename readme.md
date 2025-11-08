@@ -1,7 +1,7 @@
 
 # Backup Daemon
 
-## [Статья Хабр](https://habr.com/ru/articles/942760/)
+```bash
 
 ## Usage
 
@@ -15,6 +15,20 @@ ln -s /var/log/syslog syslog-link
 make
 ```
 
+```
+ Todo:
+
+   sudo systemctl start <service>
+   sudo systemctl stop <service>
+   sudo systemctl restart <service>
+   sudo systemctl reload <service>
+
+   sudo systemctl enable <service>
+   sudo systemctl disable <service>
+   sudo systemctl is-enabled <service>
+
+```
+
 
 ## Roadmap
 
@@ -24,7 +38,7 @@ make
 - [ ] when the OS shutdown
 - [ ] when the OS starts
 - [ ] shell UI
-- [ ] protect system files
+- [x] protect system files
 
 
 ## Todo

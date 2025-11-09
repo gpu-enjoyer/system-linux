@@ -1,8 +1,10 @@
 [Unit]
 # Читаемое имя для юнита
 Description=Backup Daemon Service
-# Запускать после сети ?
-After=network.target
+# Подключаем таймер
+Wants=backupd.timer
+# Зависимости
+#  After=...
 
 [Service]
 # Единовременный запуск по таймеру

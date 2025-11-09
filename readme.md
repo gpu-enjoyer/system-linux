@@ -2,15 +2,28 @@
 # Backup Daemon
 
 
+## Useful for debug
+
+```bash
+sudo journalctl -u backupd.timer -u backupd.service
+
+systemctl status backupd.service
+systemctl status backupd.timer
+
+sudo systemctl start backupd.service
+```
+
+
 ## Roadmap
 
 - [x] `class Config`
 - [x] `class Daemon`
 - [x] `Daemon.backup()`
-- [x] Prepare: `/etc/systemd/system/` + `/etc/backupd/` + `/usr/local/bin/`
-- [ ] Markup: `backupd.timer` + `backupd.service`
+- [x] Install: `/etc/systemd/system/` + `/etc/backupd/` + `/usr/local/bin/`
+- [x] Markup: `backupd.timer` + `backupd.service`
+- [ ] ? ~~`config.yaml`~~ стандартный config `/etc/default/backupd`
 - [ ] UI: `backupd status`
-- [ ] UI: `backupd` + `source=` / `target=` / `frequency=`
+- [ ] UI: `backupd` + set `source target frequency`
 - [ ] Protect OS system directories
 - [ ] Default права пользователя для `target_dir/`
 
@@ -20,12 +33,9 @@
 ```bash
 # Edit ./etc/backupd/config.yaml
 # cd "project dir"
-
 sudo make
-
 sudo systemctl daemon-reload
 sudo systemctl enable --now backupd.timer
-systemctl list-timers | grep backupd
 ```
 
 

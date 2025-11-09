@@ -3,8 +3,10 @@
 Description=Backup Daemon Timer
 
 [Timer]
-# Запуск каждый день в указанное время
-OnCalendar=*-*-* 20:50:00
+# Задержка 2 минуты после старта
+OnActiveSec=2min
+# Задержка 2 минуты для дальнейшей работы
+OnUnitActiveSec=2min
 # Выполнить пропущенные задания после перезагрузки
 Persistent=true
 

@@ -1,6 +1,19 @@
 
 # Backup Daemon
 
+
+## Roadmap
+
+- [x] `class Config`
+- [x] `class Daemon`
+- [x] `Daemon.backup()`
+- [x] prepare: `/etc/systemd/system/` + `/etc/backupd/` + `/usr/local/bin/`
+- [ ] markup: `backupd.timer` + `backupd.service`
+- [ ] UI: `backupd status`
+- [ ] UI: `backupd` + `source=` / `target=` / `frequency=`
+- [ ] Protect OS system directories
+
+
 ## Usage
 
 ```bash
@@ -9,26 +22,30 @@
 sudo make
 ```
 
+
 ## Как это работает
 
-1. Установщик `sudo make` копирует файлы из локального `./etc` в системный `/etc`.  
-    При установке бинарник `backupd` отправляется в `/usr/local/bin/`,  
-    а конфиг `config.yaml` отправляется в `/etc/backupd/config.yaml`.  
+1. `sudo make` копирует файлы из `./etc` в системный `/etc`.  
+    Также при установке исполняемый файл `backupd`  
+    отправляется в `/usr/local/bin/`.
 
-2. *Описание работы сервиса и таймера.*  
-    *Регулярный запуск бинарника c указаной в `config.yaml` частотой*.  
+1. `backupd.timer` сообщает системе, что пора запускать  
+    `backupd.service` по расписанию, указанному в `config.yaml`.
+    
+2. `backupd.service` в свою очередь отвечает за запуск  
+   исполняемого файла `backupd`.
+    
+3. `backupd` при каждом запуске считывает `config.yaml`, и  
+    если все в порядке, делает `backup()`.
 
-3. При каждом запуске бинарник считывает `/etc/backupd/config.yaml`  
-    и если все в порядке, делает `backup()` по указанным в `config.yaml` директориям.
-
-## Roadmap
-
-- [x] `class Daemon`
-- [x] `Daemon.backup()`
-- [x] prepare: `/etc/systemd/system/` + `/etc/backupd/`
-- [ ] markup: `/etc/systemd/system/` + `/etc/backupd/`
-- [ ] `backupd status`
-- [ ] `backupd set-source`
-- [ ] `backupd set-target`
-- [ ] `backupd set-frequency`
-- [ ] Protect OS system directories
+```
+.
+├── Makefile
+├── etc
+    ├── backupd
+    │   └── config.yaml
+    └── systemd
+        └── system
+            ├── backupd.service
+            └── backupd.timer
+```

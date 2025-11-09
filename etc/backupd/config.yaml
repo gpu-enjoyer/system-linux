@@ -1,9 +1,10 @@
 
-# Absolute path: source dirictory
+# Absolute path: source dirictory.
 source:  /home/user/Desktop/source_dir
 
-# Absolute path: target dirictory
+# Absolute path: target dirictory.
+#  Will be created if does not exist.
 target:  /home/user/Desktop/target_dir
 
-# Backup frequency: min/hour/day/week
+# Backup frequency: min/hour/day/week.
 frequency:  min

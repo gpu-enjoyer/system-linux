@@ -8,9 +8,7 @@ prepare_env:
 	script/prepare_env.sh
 
 build:
-	rm -rf .build
-	mkdir .build
-	g++ -std=c++17 code/main.cpp code/daemon.cpp -lyaml-cpp -o .build/daemon
+	script/build.sh
 
 run:
-	.build/daemon
+	/usr/local/bin/backupd

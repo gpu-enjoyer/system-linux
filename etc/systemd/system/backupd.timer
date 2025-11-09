@@ -1,4 +1,13 @@
-# 
-# Таймер для запуска исполняемого файла
-#  /usr/local/bin/backupd
-# 
+[Unit]
+# Читаемое имя для юнита
+Description=Backup Daemon Timer
+
+[Timer]
+# Запуск каждый день в указанное время
+OnCalendar=*-*-* 20:50:00
+# Выполнить пропущенные задания после перезагрузки
+Persistent=true
+
+[Install]
+# Активируется вместе с системными таймерами
+WantedBy=timers.target

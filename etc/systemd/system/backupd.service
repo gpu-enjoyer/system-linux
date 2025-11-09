@@ -1,21 +1,19 @@
+[Unit]
+# Читаемое имя для юнита
+Description=Backup Daemon Service
+# Запускать после сети ?
+After=network.target
 
-# [Unit]
-# Description=Backup Daemon Service
+[Service]
+# Единовременный запуск по таймеру
+Type=simple
+# Путь к исполняемому файлу
+ExecStart=/usr/local/bin/backupd
+# Перезапуск при ошибке
+Restart=on-failure
+User=root
+Group=root
 
-# [Service]
-# # симпл-димпл:
-# Type=simple
-# # это путь, куда положить собранный из main.cpp бинарник, правильно?
-# # а куда его лучше положить? например:
-# # /etc/backupd/main ?
-# ExecStart=/path/to/your/backupd_executable
-# # на что влияет:
-# Restart=always
-# # пускай будет руут
-# User=root
-# # на данный момент здесь только config.yaml:
-# WorkingDirectory=/etc/backupd
-
-# [Install]
-# # чето очень жесткое
-# WantedBy=multi-user.target
+[Install]
+# Стандартная активация в системе
+WantedBy=multi-user.target

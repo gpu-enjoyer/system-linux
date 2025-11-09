@@ -7,11 +7,12 @@
 - [x] `class Config`
 - [x] `class Daemon`
 - [x] `Daemon.backup()`
-- [x] prepare: `/etc/systemd/system/` + `/etc/backupd/` + `/usr/local/bin/`
-- [ ] markup: `backupd.timer` + `backupd.service`
+- [x] Prepare: `/etc/systemd/system/` + `/etc/backupd/` + `/usr/local/bin/`
+- [ ] Markup: `backupd.timer` + `backupd.service`
 - [ ] UI: `backupd status`
 - [ ] UI: `backupd` + `source=` / `target=` / `frequency=`
 - [ ] Protect OS system directories
+- [ ] Default права пользователя для `target_dir/`
 
 
 ## Usage
@@ -19,7 +20,12 @@
 ```bash
 # Edit ./etc/backupd/config.yaml
 # cd "project dir"
+
 sudo make
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now backupd.timer
+systemctl list-timers | grep backupd
 ```
 
 

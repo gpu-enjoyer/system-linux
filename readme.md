@@ -2,18 +2,6 @@
 # Backup Daemon
 
 
-## Useful for debug
-
-```bash
-sudo journalctl -u backupd.timer -u backupd.service
-
-systemctl status backupd.service
-systemctl status backupd.timer
-
-sudo systemctl start backupd.service
-```
-
-
 ## Roadmap
 
 - [x] `class Config`
@@ -36,6 +24,20 @@ sudo systemctl start backupd.service
 sudo make
 sudo systemctl daemon-reload
 sudo systemctl enable --now backupd.timer
+# ...
+sudo systemctl disable --now backupd.timer
+```
+
+
+## Useful for debug
+
+```bash
+sudo journalctl -u backupd.timer -u backupd.service
+
+systemctl status backupd.service
+systemctl status backupd.timer
+
+sudo systemctl start backupd.service
 ```
 
 

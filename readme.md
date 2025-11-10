@@ -1,6 +1,10 @@
 
 # Backup Daemon
 
+A system process that performs backups in the background.  
+[Статья Хабр](https://habr.com/ru/companies/ruvds/articles/512868/)  
+[LLM Chat](https://grok.com/c/fe3144a7-7ae2-41a5-8b75-2a386598dcbc)
+
 
 ## Roadmap
 

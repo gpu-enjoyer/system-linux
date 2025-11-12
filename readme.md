@@ -2,8 +2,7 @@
 # Backup Daemon
 
 A system process that performs backups in the background.  
-[Статья Хабр](https://habr.com/ru/companies/ruvds/articles/512868/)  
-[LLM Chat](https://grok.com/c/fe3144a7-7ae2-41a5-8b75-2a386598dcbc)
+Linux shell UI.
 
 
 ## Roadmap
@@ -13,61 +12,62 @@ A system process that performs backups in the background.
 - [x] `Daemon.backup()`
 - [x] Install: `/etc/systemd/system/` + `/etc/backupd/` + `/usr/local/bin/`
 - [x] Markup: `backupd.timer` + `backupd.service`
+- [x] Protect OS system directories
+- [x] Default права пользователя для `target_dir/`
+- [x] Shell UI
 - [ ] ? ~~`config.yaml`~~ стандартный config `/etc/default/backupd`
-- [ ] UI: `backupd status`
-- [ ] UI: `backupd` + set `source target frequency`
-- [ ] Protect OS system directories
-- [ ] Default права пользователя для `target_dir/`
+- [ ] Shell UI: set `source` `target` `frequency`
 
+
+## Install
+
+```bash
+# edit: "./etc/backupd/config.yaml"
+cd   "this project dir"
+sudo ./install.sh
+```
 
 ## Usage
 
-```bash
-# Edit ./etc/backupd/config.yaml
-# cd "project dir"
-sudo make
-sudo systemctl daemon-reload
-sudo systemctl enable --now backupd.timer
-# ...
-sudo systemctl disable --now backupd.timer
-```
+|                   |                                                                            |
+|-------------------|----------------------------------------------------------------------------|
+| `backupd status`  | `systemctl status backupd.timer backupd.service`                           |
+| `backupd enable`  | `sudo systemctl enable  --now backupd.timer`                               |
+| `backupd disable` | `sudo systemctl disable --now backupd.timer`                               |
+| `backupd run`     | `sudo systemctl start backupd.service`                                     |
+| `backupd log`     | `sudo journalctl -u backupd.timer -u backupd.service --since "1 hour ago"` |
 
 
-## Useful for debug
-
-```bash
-sudo journalctl -u backupd.timer -u backupd.service
-
-systemctl status backupd.service
-systemctl status backupd.timer
-
-sudo systemctl start backupd.service
-```
 
 
 ## Как это работает
 
-1. `sudo make` копирует файлы из `./etc` в системный `/etc`.  
-    Также при установке исполняемый файл `backupd`  
-    отправляется в `/usr/local/bin/`.
+1. `sudo install.sh` копирует файлы из `./rootfs/` в соответствующие папки `/`.  
+    Также при установке в `/usr/local/bin/` отправляются:
+    - `backupd` - скрипт UI с командами управления
+    - `backupd_run` - исполняемый файл, скомпилированный из `./code/`
 
-1. `backupd.timer` сообщает системе, что пора запускать  
+2. `backupd.timer` сообщает системе, что пора запускать  
     `backupd.service` по расписанию, указанному в `config.yaml`.
     
-2. `backupd.service` в свою очередь отвечает за запуск  
-   исполняемого файла `backupd`.
+3. `backupd.service` в свою очередь отвечает за запуск `backupd_run`.
     
-3. `backupd` при каждом запуске считывает `config.yaml`, и  
-    если все в порядке, делает `backup()`.
+4. `backupd_run` при каждом запуске считывает `config.yaml`, и  
+    если все в порядке, делает бэкап.
 
 ```
 .
-├── Makefile
-├── etc
-    ├── backupd
-    │   └── config.yaml
-    └── systemd
-        └── system
-            ├── backupd.service
-            └── backupd.timer
+└─ rootfs
+   ├── etc
+   │   ├── backupd
+   │   │   └── config.yaml
+   │   └── systemd
+   │       └── system
+   │           ├── backupd.service
+   │           └── backupd.timer
+   └── usr
+       └── local
+           └── bin
+               ├── backupd
+               └── backupd_run
 ```

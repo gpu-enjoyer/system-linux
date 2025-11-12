@@ -10,11 +10,12 @@ Wants=backupd.timer
 # Единовременный запуск по таймеру
 Type=simple
 # Путь к исполняемому файлу
-ExecStart=/usr/local/bin/backupd
+ExecStart=/usr/local/bin/backupd_run
 # Перезапуск при ошибке
 Restart=on-failure
-User=root
-Group=root
+## Защита системных файлов
+User=user
+Group=user
 
 [Install]
 # Стандартная активация в системе

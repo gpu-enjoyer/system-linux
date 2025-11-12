@@ -1,0 +1,23 @@
+#!/bin/bash
+
+case "$1" in
+  status)
+    systemctl status backupd.timer backupd.service
+    ;;
+  enable)
+    sudo systemctl enable --now backupd.timer && echo "backupd: enabled"
+    ;;
+  disable)
+    sudo systemctl disable --now backupd.timer && echo "backupd: disabled"
+    ;;
+  run)
+    sudo systemctl start backupd.service && echo "backupd: backup done"
+    ;;
+  log)
+    sudo journalctl -u backupd.timer -u backupd.service --since "1 hour ago"
+    ;;
+  *)
+    echo "$0 enable|disable|log|backup|status"
+    exit 1
+    ;;
+esac

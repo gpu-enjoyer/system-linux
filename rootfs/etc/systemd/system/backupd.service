@@ -1,22 +1,15 @@
 [Unit]
-# Читаемое имя для юнита
 Description=Backup Daemon Service
-# Подключаем таймер
 Wants=backupd.timer
-# Зависимости
-#  After=...
 
 [Service]
-# Единовременный запуск по таймеру
+EnvironmentFile=/etc/default/backupd.conf
 Type=simple
-# Путь к исполняемому файлу
-ExecStart=/usr/local/bin/backupd_run
-# Перезапуск при ошибке
+ExecStart=/usr/local/bin/backupd_run "${SOURCE}" "${TARGET}"
 Restart=on-failure
 ## Защита системных файлов
 User=user
 Group=user
 
 [Install]
-# Стандартная активация в системе
 WantedBy=multi-user.target

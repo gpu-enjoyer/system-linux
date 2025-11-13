@@ -1,15 +1,9 @@
 [Unit]
-# Читаемое имя для юнита
 Description=Backup Daemon Timer
 
 [Timer]
-# Задержка 2 минуты после старта
-OnActiveSec=2min
-# Задержка 2 минуты для дальнейшей работы
 OnUnitActiveSec=2min
-# Выполнить пропущенные задания после перезагрузки
 Persistent=true
 
 [Install]
-# Активируется вместе с системными таймерами
 WantedBy=timers.target

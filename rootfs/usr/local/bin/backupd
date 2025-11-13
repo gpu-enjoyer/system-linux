@@ -1,23 +1,64 @@
 #!/bin/bash
 
+CONF="/etc/default/backupd.conf"
+
 case "$1" in
+
+  set)
+    if [ $# -ne 3 ]; then
+      echo "Usage:"
+      echo "backupd set source|target|frequency 'value'"
+      exit 1
+    fi
+
+    KEY=$(echo "$2" | tr 'a-z' 'A-Z')
+    VAL="$3"
+
+    # существует ли ключ
+    if sudo grep -q "^$KEY=" $CONF; then
+      # ключ существует: обновить его значение
+      sudo sed -i "s|^$KEY=.*|$KEY=$VAL|" $CONF
+    else
+      # ключ не существует: добавить в конец файла
+      echo "$KEY=$VAL" | sudo tee -a $CONF >/dev/null
+    fi
+
+    if [ "$KEY" = "FREQUENCY" ]; then
+      sudo mkdir -p /etc/systemd/system/backupd.timer.d
+      echo -e "[Timer]\nOnUnitActiveSec=\nOnUnitActiveSec=$VAL" \
+      | sudo tee /etc/systemd/system/backupd.timer.d/override.conf >/dev/null
+    fi
+
+    sudo systemctl daemon-reload
+    sudo systemctl restart backupd.timer
+    echo "backupd: set: '$KEY' = '$VAL'"
+    ;;
+
   status)
-    systemctl status backupd.timer backupd.service
+    systemctl status backupd.timer backupd.service --no-pager -n 0
+    cat $CONF
     ;;
+
   enable)
-    sudo systemctl enable --now backupd.timer && echo "backupd: enabled"
+    sudo systemctl enable --now backupd.timer  && echo "backupd: enabled"
     ;;
+
   disable)
     sudo systemctl disable --now backupd.timer && echo "backupd: disabled"
     ;;
+
   run)
-    sudo systemctl start backupd.service && echo "backupd: backup done"
+    sudo systemctl start backupd.service       && echo "backupd: backup done"
     ;;
+
   log)
     sudo journalctl -u backupd.timer -u backupd.service --since "1 hour ago"
     ;;
+
   *)
-    echo "$0 enable|disable|log|backup|status"
+    echo "Usage:"
+    echo "backupd status|enable|disable|set|run|log"
     exit 1
     ;;
+
 esac
